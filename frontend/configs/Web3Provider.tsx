@@ -1,10 +1,12 @@
+"use client"
+
 import '../styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
-import type { AppProps } from 'next/app';
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { arbitrum, goerli, mainnet, optimism, polygon, hardhat } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
+import React from "react";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [
@@ -29,14 +31,13 @@ const wagmiConfig = createConfig({
   webSocketPublicClient,
 });
 
-function MyApp({ Component, pageProps }: AppProps) {
+export const Web3Provider = ({ children }: {children: React.ReactNode}) =>  {
   return (
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider showRecentTransactions chains={chains}>
-        <Component {...pageProps} />
+        {children}
       </RainbowKitProvider>
     </WagmiConfig>
   );
 }
 
-export default MyApp;
