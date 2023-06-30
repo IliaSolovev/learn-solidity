@@ -9,16 +9,22 @@ contract MinNftWithImage is ERC721, Ownable {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIdCounter;
+    mapping (address => uint256[]) public tokens_owners;
 
     constructor() ERC721("MyToken", "MTK") {}
 
     function _baseURI() internal pure override returns (string memory) {
-        return "http://localhost:3000/";
+        return "https://ipfs.io/";
     }
 
     function safeMint(address to) public onlyOwner {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
+        tokens_owners[msg.sender].push(tokenId);
+    }
+
+    function getUserTokens(address user) public view returns(uint256[] memory) {
+       return tokens_owners[user];
     }
 }
